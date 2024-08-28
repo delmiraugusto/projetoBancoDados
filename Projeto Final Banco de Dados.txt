@@ -1,0 +1,258 @@
+/* Grupo 2
+	Daniella Karius
+	Delmir Augusto
+	Gabriela Couto
+	Mariana Monteiro
+	Odair Junior
+*/
+
+/* 1- SQL de criação das tabelas (DDL) */
+
+create table empresa(
+	cnpj int primary key, 
+	nome_empresa varchar(30) not null);
+
+create table categoria(
+	codigo_categoria serial primary key,
+	nome varchar(50) not null,
+	descricao_categoria varchar(50));
+
+create table produto(
+	codigo_produto serial primary key,
+	nome varchar(50) not null,
+	descricao_produto varchar(50),
+	quantidade_estoque int default 0,
+	data_fabricacao date,
+	valor_unitario numeric,
+	codigo_categoria int, foreign key (codigo_categoria) references categoria (codigo_categoria));
+
+create table cliente(
+	codigo_cliente serial primary key,
+	nome_completo varchar(60),
+	nome_usuario varchar(30) unique not null,
+	email varchar(30) unique not null,
+	cpf_cliente char(11) unique,
+	data_nascimento date,
+	endereco varchar(50));
+
+create table pedido(
+	codigo_pedido serial primary key,
+	data_pedido date,
+	quantidade_pedida int,
+	codigo_cliente int,
+	foreign key (codigo_cliente) 
+	references cliente (codigo_cliente));
+
+create table funcionario (
+	codigo_funcionario serial primary key,
+	nome_funcionario varchar(50),
+	cpf_funcionario char(11) unique,
+	cnpj int, foreign key(cnpj) references empresa (cnpj));
+
+create table venda(
+	codigo_venda_produto integer primary key,
+	codigo_pedido int,
+	desconto numeric,
+	quantidade_vendida int, 
+	foreign key (codigo_pedido) 
+	references pedido (codigo_pedido),
+	codigo_categoria int, 
+	foreign key (codigo_categoria) 
+	references categoria (codigo_categoria),
+	cnpj int, foreign key (cnpj) references empresa (cnpj));
+/*-----------------------------------------------------------
+
+ 2- SQL de inserção de dados nas tabelas (pelo menos 5 registros em cada uma) (DML) */
+ 
+/* Inserts para a tabela empresa */
+INSERT INTO empresa (cnpj, nome_empresa) VALUES 
+(100000101, 'Tech Solutions'),
+(200000102, 'Green Energy'),
+(300000103, 'Global Marketing'),
+(400000014, 'Urban Developers'),
+(500000015, 'Innovatech'),
+(600000016, 'Skyline Services');
+
+/* Inserts para a tabela categoria */
+INSERT INTO categoria (nome, descricao_categoria) VALUES 
+('Eletrônicos', 'Produtos Eletrônicos Diversos'),
+('Informática', 'Acessórios e Equipamentos de Informática'),
+('Móveis', 'Móveis para Escritório e Casa'),
+('Periféricos', 'Equipamentos Periféricos'),
+('Eletrodomésticos', 'Aparelhos Eletrodomésticos'),
+('Multifuncionais', 'Equipamentos Multifuncionais para Escritório');
+
+/* Inserts para a tabela produto */
+INSERT INTO produto (nome, descricao_produto, quantidade_estoque, data_fabricacao, valor_unitario, codigo_categoria) VALUES 
+('Notebook', 'Notebook Dell Inspiron', 50, '2024-01-15', 3500.00, 1),
+('Smartphone', 'Smartphone Samsung Galaxy', 30, '2023-11-20', 2500.00, 2),
+('Teclado', 'Teclado Mecânico RGB', 100, '2024-02-10', 350.00, 3),
+('Mouse', 'Mouse Óptico Sem Fio', 200, '2023-09-05', 120.00, 4),
+('Monitor', 'Monitor 24 Polegadas LED', 75, '2024-03-22', 800.00, 5),
+('Impressora', 'Impressora Multifuncional', 40, '2023-08-10', 1200.00, 6);
+
+/* Inserts para a tabela cliente */
+INSERT INTO cliente (nome_completo, nome_usuario, email, cpf_cliente, data_nascimento, endereco) VALUES 
+('Ana Silva', 'anasilva', 'ana.silva@email.com', '12345678901', '1985-03-15', 'Rua A, 123'),
+('Carlos Oliveira', 'carlos_oliveira', 'carlos.oliveira@email.com', '23456789012', '1990-07-21', 'Av. B, 456'),
+('Fernanda Souza', 'fernanda_souza', 'fernanda.souza@email.com', '34567890123', '1978-11-02', 'Rua C, 789'),
+('João Pereira', 'joaop', 'joao.pereira@email.com', '45678901234', '1983-01-10', 'Av. D, 101'),
+('Mariana Costa', 'maricosta', 'mariana.costa@email.com', '56789012345', '1995-05-30', 'Rua E, 202'),
+('Ricardo Santos', 'ricardos', 'ricardo.santos@email.com', '67890123456', '1987-12-18', 'Av. F, 303');
+
+/* Inserts para a tabela pedido */
+INSERT INTO pedido (data_pedido, quantidade_pedida, codigo_pedido, codigo_cliente) VALUES 
+('2024-04-01', 4, 1, 1),
+('2024-04-02', 5, 2, 2),
+('2024-04-03', 6, 3, 3),
+('2024-04-04', 7, 4, 4),
+('2024-04-05', 8, 5, 5),
+('2024-04-06', 9, 6, 6);
+
+/* Inserts para a tabela funcionario */
+INSERT INTO funcionario (nome_funcionario, cpf_funcionario, cnpj) VALUES 
+('Lucas Almeida', '78901234567', 100000101),
+('Sofia Ferreira', '89012345678', 200000102),
+('Pedro Henrique', '90123456789', 300000103),
+('Julia Martins', '01234567890', 400000014),
+('Marcos Lima', '12345678912', 500000015),
+('Larissa Pinto', '23456789023', 600000016);
+
+/* Inserts para a tabela venda */
+INSERT INTO venda (codigo_venda_produto, codigo_pedido, codigo_categoria, quantidade_vendida, cnpj, desconto) VALUES 
+(1, 1, 1, 3, 100000101, 0.10),
+(2, 2, 2, 5, 200000102, 0.20),
+(3, 3, 3, 6, 300000103, 0.13),
+(4, 4, 4, 10, 400000014, 0.12),
+(5, 5, 5, 7, 500000015, 0.23),
+(6, 6, 6, 2, 600000016, 0.12);
+/*-----------------------------------------------------------
+
+ 2- SQL de inserção de dados nas tabelas (pelo menos 5 registros em cada uma) (DML) */
+ 
+/* Inserts para a tabela empresa */
+INSERT INTO empresa (cnpj, nome_empresa) VALUES 
+(100000101, 'Tech Solutions'),
+(200000102, 'Green Energy'),
+(300000103, 'Global Marketing'),
+(400000014, 'Urban Developers'),
+(500000015, 'Innovatech'),
+(600000016, 'Skyline Services');
+
+/* Inserts para a tabela categoria */
+INSERT INTO categoria (nome, descricao_categoria) VALUES 
+('Eletrônicos', 'Produtos Eletrônicos Diversos'),
+('Informática', 'Acessórios e Equipamentos de Informática'),
+('Móveis', 'Móveis para Escritório e Casa'),
+('Periféricos', 'Equipamentos Periféricos'),
+('Eletrodomésticos', 'Aparelhos Eletrodomésticos'),
+('Multifuncionais', 'Equipamentos Multifuncionais para Escritório');
+
+/* Inserts para a tabela produto */
+INSERT INTO produto (nome, descricao_produto, quantidade_estoque, data_fabricacao, valor_unitario, codido_categoria) VALUES 
+('Notebook', 'Notebook Dell Inspiron', 50, '2024-01-15', 3500.00, 1),
+('Smartphone', 'Smartphone Samsung Galaxy', 30, '2023-11-20', 2500.00, 2),
+('Teclado', 'Teclado Mecânico RGB', 100, '2024-02-10', 350.00, 3),
+('Mouse', 'Mouse Óptico Sem Fio', 200, '2023-09-05', 120.00, 4),
+('Monitor', 'Monitor 24 Polegadas LED', 75, '2024-03-22', 800.00, 5),
+('Impressora', 'Impressora Multifuncional', 40, '2023-08-10', 1200.00, 6);
+
+/* Inserts para a tabela cliente */
+INSERT INTO cliente (nome_completo, nome_usuario, email, cpf_cliente, data_nascimento, endereco) VALUES 
+('Ana Silva', 'anasilva', 'ana.silva@email.com', '12345678901', '1985-03-15', 'Rua A, 123'),
+('Carlos Oliveira', 'carlos_oliveira', 'carlos.oliveira@email.com', '23456789012', '1990-07-21', 'Av. B, 456'),
+('Fernanda Souza', 'fernanda_souza', 'fernanda.souza@email.com', '34567890123', '1978-11-02', 'Rua C, 789'),
+('João Pereira', 'joaop', 'joao.pereira@email.com', '45678901234', '1983-01-10', 'Av. D, 101'),
+('Mariana Costa', 'maricosta', 'mariana.costa@email.com', '56789012345', '1995-05-30', 'Rua E, 202'),
+('Ricardo Santos', 'ricardos', 'ricardo.santos@email.com', '67890123456', '1987-12-18', 'Av. F, 303');
+
+/* Inserts para a tabela pedido */
+INSERT INTO pedido (data_pedido, quantidade_pedida, codigo_pedido, codigo_cliente) VALUES 
+('2024-04-01', 4, 1, 1),
+('2024-04-02', 5, 2, 2),
+('2024-04-03', 6, 3, 3),
+('2024-04-04', 7, 4, 4),
+('2024-04-05', 8, 5, 5),
+('2024-04-06', 9, 6, 6);
+
+/* Inserts para a tabela funcionario */
+INSERT INTO funcionario (nome_funcionario, cpf_funcionario, cnpj) VALUES 
+('Lucas Almeida', '78901234567', 100000101),
+('Sofia Ferreira', '89012345678', 200000102),
+('Pedro Henrique', '90123456789', 300000103),
+('Julia Martins', '01234567890', 400000014),
+('Marcos Lima', '12345678912', 500000015),
+('Larissa Pinto', '23456789023', 600000016);
+
+/* Inserts para a tabela venda */
+INSERT INTO venda (codigo_venda_produto, codigo_pedido, codigo_categoria, quantidade_vendida, cnpj, desconto) VALUES 
+(1, 1, 1, 3, 100000101, 0.90),
+(2, 2, 2, 5, 200000102, 0.80),
+(3, 3, 3, 6, 300000103, 0.87),
+(4, 4, 4, 10, 400000014, 0.88),
+(5, 5, 5, 7, 500000015, 0.77),
+(6, 6, 6, 2, 600000016, 0.88);
+
+/*----------------------------------------------------------*/
+
+/* 3- Um comando SQL de atualização em algum registro em uma tabela (DML)*/
+
+update produto set quantidade_estoque = 30 where codigo_produto = 2;
+
+/* 4- Um comando SQL de exclusão de algum registro em uma tabela (DML) */
+
+DELETE FROM funcionario WHERE codigo_funcionario = 4;
+
+/* Pelo menos 2 com algum tipo de junção */
+
+select p.codigo_produto,p.nome, c.descricao_categoria, quantidade_estoque, valor_unitario from produto p 
+inner join categoria c
+on p.codigo_produto = c.codigo_categoria
+order by codigo_produto
+
+select v.codigo_venda_produto as Numero_da_venda, nome_usuario as nome, produto_vendido as quantidade_vendida
+FROM cliente c
+inner JOIN venda v ON v.codigo_pedido = c.codigo_cliente
+
+/* Pelo menos 1 com usando count() e group by() */
+
+select nome, count(nome) from produto 
+group by nome order by nome 
+/* Uma consulta livre */
+
+select * from produto order by valor_unitario desc limit 3
+
+/* 1 SQL para construção de nota fiscal */
+
+create view nota_fiscal as 
+select
+	p.codigo_pedido,
+	c.nome_completo as cliente,
+	c.cpf_cliente,
+	f.nome_funcionario as vendedor,
+	pr.nome as produto,
+	(p.quantidade_pedida * valor_unitario * desconto) as subtotal,
+	pr.valor_unitario,
+	v.quantidade_vendida as quantidade,
+	v.codigo_venda_produto as codigo_do_produto,
+	p.data_pedido
+from 
+	pedido p
+join
+	cliente c on p.codigo_cliente = c.codigo_cliente
+join 
+	venda v on p.codigo_pedido = v.codigo_pedido
+join
+	produto pr on v.codigo_categoria = pr.codigo_categoria
+join 
+	categoria ca on v.codigo_categoria = ca.codigo_categoria
+join 
+	pedido pe on v.quantidade_vendida = pe.quantidade_pedida
+join
+	funcionario f on f.codigo_funcionario = v.codigo_venda_produto
+order by 
+	p.codigo_pedido;
+
+select * from nota_fiscal where codigo_pedido = 2;
+
+
